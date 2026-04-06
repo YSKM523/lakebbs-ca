@@ -4,6 +4,25 @@ Public overview repository for lakebbs, a Chinese local community platform focus
 
 The private implementation lives in `lakebbs-source`. This repository exists to explain what the product is, what problems it is solving, and how the project is evolving without exposing the live application source.
 
+## Positioning
+
+lakebbs is not being positioned as a generic forum clone. The stronger product direction is:
+
+- a city-aware Chinese local information platform
+- a community layer for smaller Canadian cities with weak information infrastructure
+- a hybrid between forum, local marketplace, housing board, and settlement guide
+- a structured local product rather than a single undifferentiated feed
+
+## Stack Signal
+
+The implementation behind lakebbs is primarily JavaScript-based:
+
+- frontend: JavaScript, Vue 3, Vite, Pinia
+- backend: JavaScript, Node.js, Express, Sequelize
+- product shape: city-aware routing, local content categories, SEO landing pages, messaging, and operational scripts
+
+This public repo also includes a small JavaScript code surface so visitors can immediately see what kind of stack and patterns the project is built with.
+
 ## Snapshot
 
 | Item | Value |
@@ -14,6 +33,7 @@ The private implementation lives in `lakebbs-source`. This repository exists to 
 | Core regions | Thunder Bay, Sudbury, Northern Ontario |
 | Core categories | rentals, second-hand, jobs, immigration, local guides, community posts |
 | Product model | city-aware community platform with structured local information flows |
+| Primary stack | JavaScript, Vue 3, Vite, Node.js, Express, Sequelize |
 
 ## What lakebbs Is
 
@@ -49,6 +69,31 @@ lakebbs is aimed at that gap. The product direction is not just "another forum."
 - SEO landing pages for rentals, immigration, and university-related queries
 - private messaging and internal search
 
+## Why It Is Stronger Than A Plain Forum
+
+- city-specific routing gives each location its own information surface
+- category structure makes housing, jobs, second-hand, and community flows more usable
+- SEO landing pages turn local knowledge into long-lived discovery assets
+- the product can serve newcomers, students, renters, buyers, and local residents in one system
+- the architecture is closer to a local information platform than a simple discussion board
+
+## Public Code Surface
+
+Representative JavaScript examples in this repo:
+
+- [examples/frontend-city-routing.js](./examples/frontend-city-routing.js)
+- [examples/backend-city-feed.js](./examples/backend-city-feed.js)
+
+Example excerpt:
+
+```js
+export function buildCityPath(citySlug = 'thunderbay', section = 'freshNews') {
+  const city = String(citySlug || '').trim().toLowerCase()
+  const sectionKey = String(section || '').trim()
+  return city === 'all' ? `/${sectionKey}` : `/${city}/${sectionKey}`
+}
+```
+
 ## Repository Model
 
 | Repository | Visibility | Purpose |
@@ -66,4 +111,5 @@ lakebbs is currently being reorganized from a live VPS deployment into a cleaner
 - consolidate historical patches into the main codebase
 - improve the public-facing product narrative
 - add screenshots and architecture notes
+- expand the public code surface with more representative JavaScript snippets
 - decide how the product should be positioned long term: community forum, local information hub, or hybrid local platform
