@@ -3,6 +3,8 @@
 ## 2026-05-16
 
 - rewrote the public overview to reflect the lakebbs migration from Vue 2 + Express to Next.js 16 + React 19 + TypeScript + Drizzle ORM
+- expanded the README with a richer product narrative, stack table, product-surface breakdown, and roadmap
+- added live screenshots (`screenshots/`): home feed, real-estate section, post detail, landing page, mobile view
 - updated the stack signal, snapshot table, and repository model
 - expanded current scope to cover messaging, notifications, follow/block, admin GEO, dynamic sitemap, and dynamic robots
 - ported the public code examples from JavaScript to TypeScript
