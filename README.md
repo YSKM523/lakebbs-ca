@@ -1,12 +1,12 @@
 # lakebbs.ca
 
-Public overview repository for lakebbs, a Chinese local community platform focused on Thunder Bay, Sudbury, and Ontario's smaller northern cities.
+Public overview repository for **lakebbs** — a Chinese-language local community platform for Thunder Bay, Sudbury, and Ontario's smaller northern cities.
 
-The private implementation lives in `lakebbs-source`. This repository exists to explain what the product is, what problems it is solving, and how the project is evolving without exposing the live application source.
+The private implementation lives in a separate source repository. This repository exists to explain what the product is, what problems it is solving, and how the project is evolving — without exposing the live application source.
 
 ## Positioning
 
-lakebbs is not being positioned as a generic forum clone. The stronger product direction is:
+lakebbs is not positioned as a generic forum clone. The product direction is stronger than that:
 
 - a city-aware Chinese local information platform
 - a community layer for smaller Canadian cities with weak information infrastructure
@@ -15,13 +15,13 @@ lakebbs is not being positioned as a generic forum clone. The stronger product d
 
 ## Stack Signal
 
-The implementation behind lakebbs is primarily JavaScript-based:
+lakebbs was recently rewritten from a Vue 2 / Express stack onto a modern TypeScript stack:
 
-- frontend: JavaScript, Vue 3, Vite, Pinia
-- backend: JavaScript, Node.js, Express, Sequelize
-- product shape: city-aware routing, local content categories, SEO landing pages, messaging, and operational scripts
+- **Frontend** — Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Base UI, shadcn
+- **Backend** — Next.js Server Components + Server Actions, Drizzle ORM, MySQL 5.7, NextAuth v5
+- **Product shape** — city-aware routing, local content categories, SEO landing pages, messaging, search, notifications, admin GEO (generative engine optimization), dynamic sitemap and robots
 
-This public repo also includes a small JavaScript code surface so visitors can immediately see what kind of stack and patterns the project is built with.
+This public repo includes a small TypeScript code surface so visitors can see the kind of stack and patterns the project is built with.
 
 ## Snapshot
 
@@ -29,11 +29,11 @@ This public repo also includes a small JavaScript code surface so visitors can i
 | --- | --- |
 | Product | lakebbs |
 | Public surface | `lakebbs-ca` |
-| Private source | `lakebbs-source` |
+| Private source | private repository |
 | Core regions | Thunder Bay, Sudbury, Northern Ontario |
 | Core categories | rentals, second-hand, jobs, immigration, local guides, community posts |
 | Product model | city-aware community platform with structured local information flows |
-| Primary stack | JavaScript, Vue 3, Vite, Node.js, Express, Sequelize |
+| Primary stack | TypeScript, Next.js 16, React 19, Drizzle ORM, MySQL 5.7, NextAuth v5, Tailwind CSS 4 |
 
 ## What lakebbs Is
 
@@ -45,13 +45,13 @@ The current product surface combines:
 - city-based navigation and content isolation
 - rentals, second-hand, jobs, and local life categories
 - immigration and settlement-oriented landing pages
-- search, messaging, and local trust-building flows
+- search, private messaging, notifications, follow / block, and local trust-building flows
 
 ## Product Story
 
 For many Chinese students, newcomers, and local residents in places like Thunder Bay and Sudbury, useful information is fragmented. Housing details are scattered across chats, second-hand listings are inconsistent, job signals are noisy, and migration or settlement advice is hard to track in one place.
 
-lakebbs is aimed at that gap. The product direction is not just "another forum." It is a structured local platform that brings housing, community discussion, local services, student life, and migration-related information into one city-aware system.
+lakebbs is aimed at that gap. The product direction is not "another forum." It is a structured local platform that brings housing, community discussion, local services, student life, and migration-related information into one city-aware system.
 
 ## Why It Matters
 
@@ -59,38 +59,48 @@ lakebbs is aimed at that gap. The product direction is not just "another forum."
 - local Chinese communities often rely on fragmented channels with low structure
 - city-specific pages create better relevance than one undifferentiated feed
 - guides and landing pages can turn scattered local knowledge into reusable information assets
-- a forum model becomes more useful when paired with categories, routing, search, and operational content structure
+- a forum becomes far more useful when paired with categories, routing, search, and operational content structure
+- city-scoped surfaces and structured categories make the product friendly to both human readers and AI search engines
 
 ## Current Scope
 
-- Thunder Bay and Sudbury city surfaces
-- local forum-style posting flows
+- Thunder Bay and Sudbury city surfaces, with room for additional northern Ontario cities
+- local forum-style posting flows, with image gallery support
 - housing, second-hand, automotive, job, and community sections
 - SEO landing pages for rentals, immigration, and university-related queries
-- private messaging and internal search
+- private messaging, in-app notifications, and full-text search
+- follow / block / profile editing / password change
+- mobile-first responsive layout with dedicated top and bottom navigation bars
+- admin surface: audience distribution, AI bot activity, GEO readiness checklist, content citation tracking
+- dynamic `sitemap.xml` (root + city pages + sections + landing pages + newest posts, hourly revalidation)
+- dynamic `robots.txt` with an AI crawler allowlist and Bytespider crawl-delay
 
 ## Why It Is Stronger Than A Plain Forum
 
 - city-specific routing gives each location its own information surface
 - category structure makes housing, jobs, second-hand, and community flows more usable
-- SEO landing pages turn local knowledge into long-lived discovery assets
+- SEO and GEO landing pages turn local knowledge into long-lived discovery assets
 - the product can serve newcomers, students, renters, buyers, and local residents in one system
 - the architecture is closer to a local information platform than a simple discussion board
+- a typed, server-component-first stack keeps the product fast and shippable as it grows
 
 ## Public Code Surface
 
-Representative JavaScript examples in this repo:
+Representative TypeScript examples in this repo:
 
-- [examples/frontend-city-routing.js](./examples/frontend-city-routing.js)
-- [examples/backend-city-feed.js](./examples/backend-city-feed.js)
+- [examples/frontend-city-routing.ts](./examples/frontend-city-routing.ts)
+- [examples/backend-city-feed.ts](./examples/backend-city-feed.ts)
 
 Example excerpt:
 
-```js
-export function buildCityPath(citySlug = 'thunderbay', section = 'freshNews') {
-  const city = String(citySlug || '').trim().toLowerCase()
-  const sectionKey = String(section || '').trim()
-  return city === 'all' ? `/${sectionKey}` : `/${city}/${sectionKey}`
+```ts
+export function buildCityPath(
+  citySlug: string = 'thunderbay',
+  section: string = 'freshNews',
+): string {
+  const city = normalizeCitySlug(citySlug);
+  const sectionKey = section.trim() || 'freshNews';
+  return city === 'all' ? `/${sectionKey}` : `/${city}/${sectionKey}`;
 }
 ```
 
@@ -98,18 +108,18 @@ export function buildCityPath(citySlug = 'thunderbay', section = 'freshNews') {
 
 | Repository | Visibility | Purpose |
 | --- | --- | --- |
-| `lakebbs-source` | Private | Source code, backend, frontend, scripts, and operational files |
+| private source | Private | Source code, Next.js application, database schema, admin tools, deployment configuration |
 | `lakebbs-ca` | Public | Product overview, public notes, roadmap, and project-facing documentation |
 
 ## Current Position
 
-lakebbs is currently being reorganized from a live VPS deployment into a cleaner source structure. The implementation remains private while the project surface is being clarified for public presentation.
+lakebbs has just completed a full rewrite from the original Vue 2 + Express stack to Next.js 16 + React 19 + TypeScript + Drizzle, while preserving the existing MySQL database. The implementation remains private; this public repository tracks the product narrative and surfaces representative code patterns.
 
 ## Roadmap
 
-- clean and standardize the private source tree
-- consolidate historical patches into the main codebase
-- improve the public-facing product narrative
-- add screenshots and architecture notes
-- expand the public code surface with more representative JavaScript snippets
-- decide how the product should be positioned long term: community forum, local information hub, or hybrid local platform
+- expand city coverage beyond Thunder Bay and Sudbury into more northern Ontario cities
+- deepen GEO (generative engine optimization) coverage so AI search engines cite local content correctly
+- continue building out the local marketplace flows (housing, second-hand, jobs)
+- grow the landing page library for high-intent local queries (rentals, immigration, schools)
+- add screenshots and architecture notes to the public surface
+- expand the public code surface with more representative TypeScript snippets
